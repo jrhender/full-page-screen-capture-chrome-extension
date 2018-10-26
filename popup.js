@@ -117,6 +117,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 
     var filename = getFilename(tab.url);
 
-    CaptureAPI.captureToFiles(tab, filename, displayCaptures,
-                              errorHandler, progress, splitnotifier);
+    // CaptureAPI.captureToFiles(tab, filename, displayCaptures,
+    //                           errorHandler, progress, splitnotifier);
+
+    CaptureAPI.captureToGoogleCloud();
 });

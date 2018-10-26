@@ -299,10 +299,28 @@ window.CaptureAPI = (function() {
         }, errback, progress, splitnotifier);
     }
 
+    function captureToGoogleCloud() {
+        chrome.tabs.captureVisibleTab(
+            null, {format: 'png', quality: 100}, function(dataURI) {
+                if (dataURI) {
+                    // Create a root reference
+                    var storageRef = firebase.storage().ref();
+
+                    // Create a reference to 'images/mountains.jpg'
+                    var ref = storageRef.child('images/mountains.jpg');
+
+                    ref.putString(dataURI, 'data_url').then(function(snapshot) {
+                        console.log('Uploaded a data_url string!');
+                    });
+                }
+            }
+        );
+    }
 
     return {
         captureToBlobs: captureToBlobs,
-        captureToFiles: captureToFiles
+        captureToFiles: captureToFiles,
+        captureToGoogleCloud: captureToGoogleCloud
     };
 
 })();

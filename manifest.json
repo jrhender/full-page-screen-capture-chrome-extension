@@ -19,5 +19,6 @@
     "16": "icon16-999.png",
     "48": "icon48-999.png",
     "128": "icon128-999.png"
-  }
+  },
+  "content_security_policy": "script-src 'self' https://www.gstatic.com; object-src 'self'"
 }
