@@ -1,19 +1,15 @@
-full-page-screen-capture.pem
-full-page-screen-capture.zip
-.DS_Store
-setupFirebase.js
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-##Below is added from create-react-app
 # dependencies
-./node_modules
-./.pnp
+/node_modules
+/.pnp
 .pnp.js
 
 # testing
-./coverage
+/coverage
 
 # production
-./build
+/build
 
 # misc
 .DS_Store
