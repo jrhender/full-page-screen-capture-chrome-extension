@@ -307,11 +307,16 @@ window.CaptureAPI = (function() {
                     var storageRef = firebase.storage().ref();
 
                     // Create a reference to 'images/mountains.jpg'
-                    var ref = storageRef.child('images/mountains.jpg');
+                    var ref = storageRef.child('images/mountains2.jpg');
 
-                    ref.putString(dataURI, 'data_url').then(function(snapshot) {
+                    ref.putString(dataURI, 'data_url')
+                    .then(function(snapshot) {
                         console.log('Uploaded a data_url string!');
-                    });
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                        window.alert(error.message);
+                    })
                 }
             }
         );
