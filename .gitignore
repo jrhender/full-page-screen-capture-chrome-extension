@@ -6,14 +6,14 @@ setupFirebase.js
 ##Below is added from create-react-app
 # dependencies
 node_modules/
-./.pnp
+.pnp
 .pnp.js
 
 # testing
-./coverage
+coverage
 
 # production
-./build
+build
 
 # misc
 .DS_Store
