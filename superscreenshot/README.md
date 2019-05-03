@@ -1,3 +1,13 @@
+#Custom documentation added by John H
+
+## Build Instructions
+1. Running "INLINE_RUNTIME_CHUNK=false yarn run build" will run the build without any inline javascript in the but this will overwrite the manifest.json file.
+Inline script is not allowed by chrome extension policy: https://stackoverflow.com/questions/36622181/how-to-fix-chrome-extension-inline-javascript-invocation-error 
+This pull request added the option to Create-React-App: https://github.com/facebook/create-react-app/pull/5354 
+2. Prepped the manifest.json file as per https://veerasundar.com/blog/2018/05/how-to-create-a-chrome-extension-in-react-js/
+
+#Default Create React App documentation
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
