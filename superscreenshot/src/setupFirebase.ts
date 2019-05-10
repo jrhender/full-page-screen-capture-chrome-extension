@@ -7,7 +7,7 @@ var config = {
     authDomain: "sportseventdetection.firebaseapp.com",
     databaseURL: "https://sportseventdetection.firebaseio.com",
     projectId: "sportseventdetection",
-    storageBucket: "sportseventdetection.appspot.com",
+    storageBucket: "sportseventdetection-football",
     messagingSenderId: "425752684813"
 };
 firebase.initializeApp(config);

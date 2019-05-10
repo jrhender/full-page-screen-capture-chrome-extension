@@ -6,6 +6,24 @@ Inline script is not allowed by chrome extension policy: https://stackoverflow.c
 This pull request added the option to Create-React-App: https://github.com/facebook/create-react-app/pull/5354 
 2. Prepped the manifest.json file as per https://veerasundar.com/blog/2018/05/how-to-create-a-chrome-extension-in-react-js/
 
+## Security Rules
+### Permissive Rules
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write;
+    }
+  }
+}
+### Restrictive Rules
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
 #Default Create React App documentation
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

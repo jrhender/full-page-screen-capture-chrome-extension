@@ -10,6 +10,7 @@ interface IProps {
 interface IState {
   homeTeamName: string;
   awayTeamName: string;
+  gameDate: string;
   isTouchdown: boolean;
 }
 
@@ -19,33 +20,29 @@ class App extends React.PureComponent<IProps, IState> {
     this.state = {
       homeTeamName: '',
       awayTeamName: '',
+      gameDate: '',
       isTouchdown: true
     };
     this.handleChangeHomeTeamName = this.handleChangeHomeTeamName.bind(this);
+    this.handleChangeAwayTeamName = this.handleChangeAwayTeamName.bind(this);
     this.handleChangeTDCheckbox = this.handleChangeTDCheckbox.bind(this);
+    this.handleChangeGameDatePicker = this.handleChangeGameDatePicker.bind(this);
   }
 
-  captureToGoogleCloud = function(homeTeamName: string, isTouchdown: boolean){
+  captureToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isTouchdown: boolean){
     chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, function(dataURI: string) {
         if (dataURI) {
           if(firebase.storage)
           {
             // Create a root reference
             let storageRef = firebase.storage().ref()
-
-            // Calculate date
-            let day = new Date();
-            let dd = String(day.getDate()).padStart(2, '0');
-            let mm = String(day.getMonth() + 1).padStart(2, '0'); //January is 0!
-            let yyyy = day.getFullYear();
-            let today = mm + '-' + dd + '-' + yyyy;
             
             // Calculate name
             if(isTouchdown) {
-              var ref = storageRef.child(`images/football/touchdown/${homeTeamName}_1_${today}`);
+              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isTD`);
             }
             else {
-              var ref = storageRef.child(`images/football/nottouchdown/${homeTeamName}_0_${today}`);
+              var ref = storageRef.child(`images/nottouchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD`);
             }
 
             // Upload image
@@ -74,6 +71,10 @@ class App extends React.PureComponent<IProps, IState> {
   handleChangeTDCheckbox(event : React.ChangeEvent<HTMLInputElement>) {
     this.setState({isTouchdown: event.target.checked});
   }
+
+  handleChangeGameDatePicker(event : React.ChangeEvent<HTMLInputElement>) {
+    this.setState({gameDate: event.target.value});
+  }
   
   render() {
     return (
@@ -94,10 +95,14 @@ class App extends React.PureComponent<IProps, IState> {
             <TeamDropdown onTeamChange={this.handleChangeAwayTeamName}/>
           </label>
           <label>
+            Game Date:
+            <input type="date" onChange={this.handleChangeGameDatePicker} />
+          </label>
+          <label>
             Is Touchdown:
             <input type="checkbox" defaultChecked={this.state.isTouchdown} onChange={this.handleChangeTDCheckbox}/>
           </label>
-          <input type='button' value='captureToFirebase' onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.isTouchdown)} />
+          <input type='button' value='captureToFirebase' onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isTouchdown)} />
         </form>
       </div>
     );
