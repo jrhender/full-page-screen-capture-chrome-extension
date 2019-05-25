@@ -33,13 +33,17 @@ class App extends React.Component<IProps, IState> {
   async componentDidMount() {
     var data: any = await getStorageData('homeTeamName');
     const homeTeamName = data['homeTeamName'];
-    console.log("got hometeam from storage: " + homeTeamName);
+
     var data: any = await getStorageData('awayTeamName');
     const awayTeamName = data['awayTeamName'];
-    console.log("got awayteam from storage: " + awayTeamName);
+
+    var data: any = await getStorageData('gameDate');
+    const gameDate = data['gameDate'];
+
     this.setState({
       homeTeamName: homeTeamName || '',
-      awayTeamName: awayTeamName || ''
+      awayTeamName: awayTeamName || '',
+      gameDate: gameDate || ''
     });
   }
 
@@ -102,7 +106,9 @@ class App extends React.Component<IProps, IState> {
   }
 
   handleChangeGameDatePicker(event : React.ChangeEvent<HTMLInputElement>) {
-    this.setState({gameDate: event.target.value});
+    let newState = {gameDate: event.target.value};
+    setStorageData(newState);
+    this.setState(newState);
   }
   
   render() {
@@ -125,7 +131,7 @@ class App extends React.Component<IProps, IState> {
           </label>
           <label>
             Game Date:
-            <input type="date" onChange={this.handleChangeGameDatePicker} />
+            <input type="date" onChange={this.handleChangeGameDatePicker} value={this.state.gameDate}/>
           </label>
           <label>
             Is Touchdown:
