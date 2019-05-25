@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { getStorageData, setStorageData } from './chromeStorageUtils';
 
 interface ITeamDropdownProps {
-    onTeamChange: (teamName: string) => void
+    onTeamChange: (teamName: string) => void,
+    selectedTeam: string
 }
 
 const TeamDropdown = React.memo<ITeamDropdownProps>((props: ITeamDropdownProps) => {
     return (
-        <select onChange={(event : React.ChangeEvent<HTMLSelectElement>) => props.onTeamChange(event.target.value)}>
+        <select onChange={(event : React.ChangeEvent<HTMLSelectElement>) => props.onTeamChange(event.target.value)} value={props.selectedTeam}>
             <option value="">--Please choose an option--</option>
             <option value="cardinals">Arizona Cardinals</option>
             <option value="falcons">Atlanta Falcons</option>

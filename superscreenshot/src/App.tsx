@@ -117,11 +117,11 @@ class App extends React.Component<IProps, IState> {
         <form className="ImageDataForm">
           <label>
             Home Team Name:
-            <TeamDropdown onTeamChange={this.handleChangeHomeTeamName}/>
+            <TeamDropdown onTeamChange={this.handleChangeHomeTeamName} selectedTeam={this.state.homeTeamName}/>
           </label>
           <label>
             Away Team Name:
-            <TeamDropdown onTeamChange={this.handleChangeAwayTeamName}/>
+            <TeamDropdown onTeamChange={this.handleChangeAwayTeamName} selectedTeam={this.state.awayTeamName}/>
           </label>
           <label>
             Game Date:
