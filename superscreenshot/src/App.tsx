@@ -1,5 +1,6 @@
 import React from 'react';
 import { firebase } from './setupFirebase';
+import { getStorageData, setStorageData } from './chromeStorageUtils';
 import TeamDropdown from './TeamDropdown';
 import logo from './cartoon-football-png-16.png';
 import './App.css';
@@ -14,7 +15,7 @@ interface IState {
   isTouchdown: boolean;
 }
 
-class App extends React.PureComponent<IProps, IState> {
+class App extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -29,20 +30,44 @@ class App extends React.PureComponent<IProps, IState> {
     this.handleChangeGameDatePicker = this.handleChangeGameDatePicker.bind(this);
   }
 
+  async componentDidMount() {
+    var data: any = await getStorageData('homeTeamName');
+    const homeTeamName = data['homeTeamName'];
+    console.log("got hometeam from storage: " + homeTeamName);
+    var data: any = await getStorageData('awayTeamName');
+    const awayTeamName = data['awayTeamName'];
+    console.log("got awayteam from storage: " + awayTeamName);
+    this.setState({
+      homeTeamName: homeTeamName || '',
+      awayTeamName: awayTeamName || ''
+    });
+  }
+
   captureToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isTouchdown: boolean){
     chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, function(dataURI: string) {
         if (dataURI) {
           if(firebase.storage)
           {
+            // Create Date string
+            let now = new Date();
+            let year = now.getUTCFullYear().toString();
+            let month = now.getUTCMonth().toString();
+            let day = now.getUTCDate().toString();
+            let hour = now.getUTCHours().toString();
+            let minute = now.getUTCHours().toString();
+            let seconds = now.getUTCSeconds().toString();
+            let milliseconds = now.getUTCMilliseconds().toString();
+            let dateString = year.concat('-',month,'-',day,'T',hour,'-',minute,'-',seconds,'-',milliseconds);
+            
             // Create a root reference
             let storageRef = firebase.storage().ref()
             
             // Calculate name
             if(isTouchdown) {
-              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isTD`);
+              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isTD_${dateString}`);
             }
             else {
-              var ref = storageRef.child(`images/nottouchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD`);
+              var ref = storageRef.child(`images/nottouchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD_${dateString}`);
             }
 
             // Upload image
@@ -61,11 +86,15 @@ class App extends React.PureComponent<IProps, IState> {
   }
 
   handleChangeHomeTeamName(teamName : string) {
-    this.setState({homeTeamName: teamName});
+    let newState = {homeTeamName: teamName};
+    setStorageData(newState);
+    this.setState(newState);
   }
 
   handleChangeAwayTeamName(teamName : string) {
-    this.setState({awayTeamName: teamName});
+    let newState = {awayTeamName: teamName};
+    setStorageData(newState);
+    this.setState(newState);
   }
 
   handleChangeTDCheckbox(event : React.ChangeEvent<HTMLInputElement>) {
