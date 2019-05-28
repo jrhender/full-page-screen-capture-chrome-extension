@@ -12,7 +12,8 @@ interface IState {
   homeTeamName: string;
   awayTeamName: string;
   gameDate: string;
-  isTouchdown: boolean;
+  isHomeTeamTouchdown: boolean;
+  isAwayTeamTouchdown: boolean;
 }
 
 class App extends React.Component<IProps, IState> {
@@ -22,11 +23,13 @@ class App extends React.Component<IProps, IState> {
       homeTeamName: '',
       awayTeamName: '',
       gameDate: '',
-      isTouchdown: true
+      isHomeTeamTouchdown: false,
+      isAwayTeamTouchdown: false
     };
     this.handleChangeHomeTeamName = this.handleChangeHomeTeamName.bind(this);
     this.handleChangeAwayTeamName = this.handleChangeAwayTeamName.bind(this);
-    this.handleChangeTDCheckbox = this.handleChangeTDCheckbox.bind(this);
+    this.handleChangeHomeTeamTDCheckbox = this.handleChangeHomeTeamTDCheckbox.bind(this);
+    this.handleChangeAwayTeamTDCheckbox = this.handleChangeAwayTeamTDCheckbox.bind(this);
     this.handleChangeGameDatePicker = this.handleChangeGameDatePicker.bind(this);
   }
 
@@ -47,7 +50,7 @@ class App extends React.Component<IProps, IState> {
     });
   }
 
-  captureToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isTouchdown: boolean){
+  captureToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
     chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, function(dataURI: string) {
         if (dataURI) {
           if(firebase.storage)
@@ -67,11 +70,17 @@ class App extends React.Component<IProps, IState> {
             let storageRef = firebase.storage().ref()
             
             // Calculate name
-            if(isTouchdown) {
-              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isTD_${dateString}`);
+            if(isHomeTeamTouchdown && !isAwayTeamTouchdown) {
+              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isHomeTeamTD_${dateString}`);
+            }
+            else if(!isHomeTeamTouchdown && isAwayTeamTouchdown) {
+              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isAwayTeamTD_${dateString}`);
+            }
+            else if(!isHomeTeamTouchdown && !isAwayTeamTouchdown) {
+              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD_${dateString}`);
             }
             else {
-              var ref = storageRef.child(`images/nottouchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD_${dateString}`);
+              return;
             }
 
             // Upload image
@@ -101,14 +110,18 @@ class App extends React.Component<IProps, IState> {
     this.setState(newState);
   }
 
-  handleChangeTDCheckbox(event : React.ChangeEvent<HTMLInputElement>) {
-    this.setState({isTouchdown: event.target.checked});
-  }
-
   handleChangeGameDatePicker(event : React.ChangeEvent<HTMLInputElement>) {
     let newState = {gameDate: event.target.value};
     setStorageData(newState);
     this.setState(newState);
+  }
+
+  handleChangeHomeTeamTDCheckbox(event : React.ChangeEvent<HTMLInputElement>) {
+    this.setState({isHomeTeamTouchdown: event.target.checked});
+  }
+
+  handleChangeAwayTeamTDCheckbox(event : React.ChangeEvent<HTMLInputElement>) {
+    this.setState({isAwayTeamTouchdown: event.target.checked});
   }
   
   render() {
@@ -134,10 +147,17 @@ class App extends React.Component<IProps, IState> {
             <input type="date" onChange={this.handleChangeGameDatePicker} value={this.state.gameDate}/>
           </label>
           <label>
-            Is Touchdown:
-            <input type="checkbox" defaultChecked={this.state.isTouchdown} onChange={this.handleChangeTDCheckbox}/>
+            Is Home Team Touchdown:
+            <input type="checkbox" defaultChecked={this.state.isHomeTeamTouchdown} onChange={this.handleChangeHomeTeamTDCheckbox}/>
           </label>
-          <input type='button' value='captureToFirebase' onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isTouchdown)} />
+          <label>
+            Is Away Team Touchdown:
+            <input type="checkbox" defaultChecked={this.state.isHomeTeamTouchdown} onChange={this.handleChangeAwayTeamTDCheckbox}/>
+          </label>
+          <input 
+            type='button' 
+            value='captureToFirebase'
+            onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
         </form>
       </div>
     );
