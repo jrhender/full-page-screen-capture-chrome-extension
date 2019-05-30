@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface IVideoStreamProps {
 }
@@ -7,7 +7,6 @@ interface IVideoStreamState {
 }
 
 class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> {
-    
     constructor(props: IVideoStreamProps) {
         super(props);
         this.video = null;
