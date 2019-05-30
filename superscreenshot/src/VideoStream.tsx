@@ -29,6 +29,25 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
             window.alert(error.message);
         }
     }
+
+    async enumerateDevices() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+            console.log("enumerateDevices() not supported.");
+            return;
+        }
+          
+        // List cameras and microphones.
+        navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+            devices.forEach(function(device) {
+                console.log(device.kind + ": " + device.label +
+                            " id = " + device.deviceId);
+            });
+        })
+        .catch(function(err) {
+            console.log(err.name + ": " + err.message);
+        });
+    }
     
     render () {
         return (
@@ -38,6 +57,20 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
                     value='open video stream'
                     onClick={this.useVideoStream}
                 />
+                <div>
+                    <select value={this.state.selectedTeam} 
+                            onChange={(e) => this.setState({selectedTeam: e.target.value, validationError: e.target.value === "" ? "You must select your favourite team" : ""})}>
+                        {this.state.teams.map((team) => <option key={team.value} value={team.value}>{team.display}</option>)}
+                    </select>
+                    {/* <div style={{color: 'red', marginTop: '5px'}}>
+                    {this.state.validationError}
+                    </div> */}
+                    <input 
+                        type='button' 
+                        value='enumerate devices'
+                        onClick={this.enumerateDevices}
+                    />
+                </div>
                 <video 
                     id="video" 
                     width="160" 
