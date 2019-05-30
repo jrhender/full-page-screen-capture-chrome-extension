@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { getStorageData, setStorageData } from './chromeStorageUtils';
+import React from 'react';
 
 interface ITeamDropdownProps {
     onTeamChange: (teamName: string) => void,

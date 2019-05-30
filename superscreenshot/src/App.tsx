@@ -2,6 +2,7 @@ import React from 'react';
 import { firebase } from './setupFirebase';
 import { getStorageData, setStorageData } from './chromeStorageUtils';
 import TeamDropdown from './TeamDropdown';
+import MediaStream from './MediaStream';
 import logo from './cartoon-football-png-16.png';
 import './App.css';
 
@@ -34,20 +35,20 @@ class App extends React.Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    var data: any = await getStorageData('homeTeamName');
-    const homeTeamName = data['homeTeamName'];
+    // var data: any = await getStorageData('homeTeamName');
+    // const homeTeamName = data['homeTeamName'];
 
-    var data: any = await getStorageData('awayTeamName');
-    const awayTeamName = data['awayTeamName'];
+    // var data: any = await getStorageData('awayTeamName');
+    // const awayTeamName = data['awayTeamName'];
 
-    var data: any = await getStorageData('gameDate');
-    const gameDate = data['gameDate'];
+    // var data: any = await getStorageData('gameDate');
+    // const gameDate = data['gameDate'];
 
-    this.setState({
-      homeTeamName: homeTeamName || '',
-      awayTeamName: awayTeamName || '',
-      gameDate: gameDate || ''
-    });
+    // this.setState({
+    //   homeTeamName: homeTeamName || '',
+    //   awayTeamName: awayTeamName || '',
+    //   gameDate: gameDate || ''
+    // });
   }
 
   captureToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
@@ -99,20 +100,21 @@ class App extends React.Component<IProps, IState> {
   }
 
   handleChangeHomeTeamName(teamName : string) {
+    setStorageData('homeTeamName', teamName);
     let newState = {homeTeamName: teamName};
-    setStorageData(newState);
     this.setState(newState);
   }
 
   handleChangeAwayTeamName(teamName : string) {
+    setStorageData('awayTeamName', teamName);
     let newState = {awayTeamName: teamName};
-    setStorageData(newState);
     this.setState(newState);
   }
 
   handleChangeGameDatePicker(event : React.ChangeEvent<HTMLInputElement>) {
-    let newState = {gameDate: event.target.value};
-    setStorageData(newState);
+    let newDate = event.target.value;
+    setStorageData('gameDate', newDate);
+    let newState = {gameDate: newDate};
     this.setState(newState);
   }
 
@@ -159,6 +161,7 @@ class App extends React.Component<IProps, IState> {
             value='captureToFirebase'
             onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
         </form>
+        <MediaStream />
       </div>
     );
   }
