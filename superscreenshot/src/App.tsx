@@ -2,7 +2,7 @@ import React from 'react';
 import { firebase } from './setupFirebase';
 import { getStorageData, setStorageData } from './chromeStorageUtils';
 import TeamDropdown from './TeamDropdown';
-import MediaStream from './MediaStream';
+import VideoStream from './VideoStream';
 import logo from './cartoon-football-png-16.png';
 import './App.css';
 
@@ -161,7 +161,7 @@ class App extends React.Component<IProps, IState> {
             value='captureToFirebase'
             onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
         </form>
-        <MediaStream />
+        <VideoStream />
       </div>
     );
   }
