@@ -4,21 +4,32 @@ interface IVideoStreamProps {
 }
 
 interface IVideoStreamState {
+    videoDevices: MediaDeviceInfo[];
+    selectedDeviceId: string
 }
 
 class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> {
+    
+    private video: HTMLVideoElement | null
+
     constructor(props: IVideoStreamProps) {
         super(props);
+        this.state = {
+            videoDevices: new Array<MediaDeviceInfo>(),
+            selectedDeviceId: ""
+        }
         this.video = null;
         this.useVideoStream = this.useVideoStream.bind(this);
     }
 
-    private video: HTMLVideoElement | null
+    async componentDidMount() {
+        this.enumerateDevices();
+    }
 
     async useVideoStream() {
         let constraints: MediaStreamConstraints = {
             audio: false,
-            video: true
+            video: {deviceId: this.state.selectedDeviceId}
         }
 
         try {
@@ -33,20 +44,22 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
     async enumerateDevices() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
             console.log("enumerateDevices() not supported.");
-            return;
         }
           
         // List cameras and microphones.
-        navigator.mediaDevices.enumerateDevices()
-        .then(function(devices) {
-            devices.forEach(function(device) {
+        try {
+            let devices = await navigator.mediaDevices.enumerateDevices();
+            let videoDevices = devices.filter(d => d.kind == "videoinput");
+            videoDevices.forEach(function(device) {
                 console.log(device.kind + ": " + device.label +
                             " id = " + device.deviceId);
             });
-        })
-        .catch(function(err) {
+            this.setState({
+                videoDevices : videoDevices
+            })
+        } catch (err) {
             console.log(err.name + ": " + err.message);
-        });
+        }
     }
     
     render () {
@@ -58,13 +71,10 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
                     onClick={this.useVideoStream}
                 />
                 <div>
-                    <select value={this.state.selectedTeam} 
-                            onChange={(e) => this.setState({selectedTeam: e.target.value, validationError: e.target.value === "" ? "You must select your favourite team" : ""})}>
-                        {this.state.teams.map((team) => <option key={team.value} value={team.value}>{team.display}</option>)}
+                    <select value={this.state.selectedDeviceId} 
+                            onChange={(e) => this.setState({selectedDeviceId: e.target.value})}>
+                        {this.state.videoDevices.map((vd) => <option key={vd.deviceId} value={vd.deviceId}>{vd.label}</option>)}
                     </select>
-                    {/* <div style={{color: 'red', marginTop: '5px'}}>
-                    {this.state.validationError}
-                    </div> */}
                     <input 
                         type='button' 
                         value='enumerate devices'
