@@ -65,11 +65,6 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
     render () {
         return (
             <div>
-                <input 
-                    type='button' 
-                    value='open video stream'
-                    onClick={this.useVideoStream}
-                />
                 <div>
                     <select value={this.state.selectedDeviceId} 
                             onChange={(e) => this.setState({selectedDeviceId: e.target.value})}>
@@ -80,6 +75,11 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
                         value='enumerate devices'
                         onClick={this.enumerateDevices}
                     />
+                    <input 
+                        type='button' 
+                        value='open video stream'
+                        onClick={this.useVideoStream}
+                    />
                 </div>
                 <video 
                     id="video" 
@@ -88,6 +88,12 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
                     autoPlay={true}
                     ref={(ref) => {this.video = ref}}
                 />
+                <canvas id="canvas">
+                </canvas>
+                <div style={{display:'none'}}>
+                    <img id="photo" alt="The screen capture will appear in this box."/>
+                </div>
+                <button id="startbutton">Take photo</button>
             </div>
         )
     }
