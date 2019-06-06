@@ -24,6 +24,9 @@ service firebase.storage {
   }
 }
 
+## References
+- Still image cpature was described here: https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Taking_still_photos
+
 #Default Create React App documentation
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
