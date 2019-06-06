@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface IVideoStreamProps {
+    onVideoUpdate: (videoRef: HTMLVideoElement) => void
 }
 
 interface IVideoStreamState {
@@ -22,7 +23,7 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
         this.useVideoStream = this.useVideoStream.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.enumerateDevices();
     }
 
@@ -34,7 +35,10 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
 
         try {
             let mediaStream: MediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-            this.video ? this.video.srcObject = mediaStream : null;
+            if(this.video) {
+                this.video.srcObject = mediaStream;
+                this.props.onVideoUpdate(this.video);
+            }
         } catch(error) {
             console.log(error);
             window.alert(error.message);
@@ -88,12 +92,6 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
                     autoPlay={true}
                     ref={(ref) => {this.video = ref}}
                 />
-                <canvas id="canvas">
-                </canvas>
-                <div style={{display:'none'}}>
-                    <img id="photo" alt="The screen capture will appear in this box."/>
-                </div>
-                <button id="startbutton">Take photo</button>
             </div>
         )
     }

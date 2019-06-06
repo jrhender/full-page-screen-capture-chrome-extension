@@ -5,6 +5,7 @@ import TeamDropdown from './TeamDropdown';
 import VideoStream from './VideoStream';
 import logo from './cartoon-football-png-16.png';
 import './App.css';
+import VideoCapture from './VideoCapture';
 
 interface IProps {
 }
@@ -15,6 +16,7 @@ interface IState {
   gameDate: string;
   isHomeTeamTouchdown: boolean;
   isAwayTeamTouchdown: boolean;
+  videoRef: HTMLVideoElement | undefined;
 }
 
 class App extends React.Component<IProps, IState> {
@@ -25,13 +27,15 @@ class App extends React.Component<IProps, IState> {
       awayTeamName: '',
       gameDate: '',
       isHomeTeamTouchdown: false,
-      isAwayTeamTouchdown: false
+      isAwayTeamTouchdown: false,
+      videoRef: undefined
     };
     this.handleChangeHomeTeamName = this.handleChangeHomeTeamName.bind(this);
     this.handleChangeAwayTeamName = this.handleChangeAwayTeamName.bind(this);
     this.handleChangeHomeTeamTDCheckbox = this.handleChangeHomeTeamTDCheckbox.bind(this);
     this.handleChangeAwayTeamTDCheckbox = this.handleChangeAwayTeamTDCheckbox.bind(this);
     this.handleChangeGameDatePicker = this.handleChangeGameDatePicker.bind(this);
+    this.handleChangeVideoRef = this.handleChangeVideoRef.bind(this);
   }
 
   async componentDidMount() {
@@ -125,6 +129,10 @@ class App extends React.Component<IProps, IState> {
   handleChangeAwayTeamTDCheckbox(event : React.ChangeEvent<HTMLInputElement>) {
     this.setState({isAwayTeamTouchdown: event.target.checked});
   }
+
+  handleChangeVideoRef(video : HTMLVideoElement) {
+    this.setState({videoRef: video});
+  }
   
   render() {
     return (
@@ -161,7 +169,8 @@ class App extends React.Component<IProps, IState> {
             value='captureToFirebase'
             onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
         </form>
-        <VideoStream />
+        <VideoStream onVideoUpdate={this.handleChangeVideoRef}/>
+        <VideoCapture videoRef={this.state.videoRef}/>
       </div>
     );
   }
