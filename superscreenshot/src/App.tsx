@@ -58,52 +58,54 @@ class App extends React.Component<IProps, IState> {
     // });
   }
 
-  captureTabToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
-    chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, function(dataURI: string) {
-        if (dataURI) {
-          if(firebase.storage)
-          {
-            // Create Date string
-            let now = new Date();
-            let year = now.getUTCFullYear().toString();
-            let month = now.getUTCMonth().toString();
-            let day = now.getUTCDate().toString();
-            let hour = now.getUTCHours().toString();
-            let minute = now.getUTCHours().toString();
-            let seconds = now.getUTCSeconds().toString();
-            let milliseconds = now.getUTCMilliseconds().toString();
-            let dateString = year.concat('-',month,'-',day,'T',hour,'-',minute,'-',seconds,'-',milliseconds);
-            
-            // Create a root reference
-            let storageRef = firebase.storage().ref()
-            
-            // Calculate name
-            if(isHomeTeamTouchdown && !isAwayTeamTouchdown) {
-              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isHomeTeamTD_${dateString}`);
-            }
-            else if(!isHomeTeamTouchdown && isAwayTeamTouchdown) {
-              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isAwayTeamTD_${dateString}`);
-            }
-            else if(!isHomeTeamTouchdown && !isAwayTeamTouchdown) {
-              var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD_${dateString}`);
-            }
-            else {
-              return;
-            }
-
-            // Upload image
-            ref.putString(dataURI, 'data_url')
-            .then(function(snapshot) {
-                console.log('Uploaded a data_url string!');
-            })
-            .catch(function(error) {
-                console.log(error);
-                window.alert(error.message);
-            })
-          }   
-        }
+  captureTabToGoogleCloud(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
+    chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, (dataURI: string) => {
+        this.sendImageDataUrlToFirebase(dataURI);
       }
     );
+  }
+
+  sendImageDataUrlToFirebase(dataUrl: string) {
+    if(firebase.storage)
+    {
+      // Create Date string
+      let now = new Date();
+      let year = now.getUTCFullYear().toString();
+      let month = now.getUTCMonth().toString();
+      let day = now.getUTCDate().toString();
+      let hour = now.getUTCHours().toString();
+      let minute = now.getUTCHours().toString();
+      let seconds = now.getUTCSeconds().toString();
+      let milliseconds = now.getUTCMilliseconds().toString();
+      let dateString = year.concat('-',month,'-',day,'T',hour,'-',minute,'-',seconds,'-',milliseconds);
+      
+      // Create a root reference
+      let storageRef = firebase.storage().ref()
+      
+      // Calculate name
+      if(isHomeTeamTouchdown && ! isAwayTeamTouchdown) {
+        var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isHomeTeamTD_${dateString}`);
+      }
+      else if(!isHomeTeamTouchdown && isAwayTeamTouchdown) {
+        var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isAwayTeamTD_${dateString}`);
+      }
+      else if(!isHomeTeamTouchdown && !isAwayTeamTouchdown) {
+        var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD_${dateString}`);
+      }
+      else {
+        return;
+      }
+
+      // Upload image
+      ref.putString(dataUrl, 'data_url')
+      .then(function(snapshot) {
+          console.log('Uploaded a data_url string!');
+      })
+      .catch(function(error) {
+          console.log(error);
+          window.alert(error.message);
+      })  
+    }
   }
 
   handleChangeHomeTeamName(teamName : string) {
