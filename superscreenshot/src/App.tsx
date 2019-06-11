@@ -17,6 +17,7 @@ interface IState {
   isHomeTeamTouchdown: boolean;
   isAwayTeamTouchdown: boolean;
   videoRef: HTMLVideoElement | undefined;
+  imageUrl: string;
 }
 
 class App extends React.Component<IProps, IState> {
@@ -28,7 +29,8 @@ class App extends React.Component<IProps, IState> {
       gameDate: '',
       isHomeTeamTouchdown: false,
       isAwayTeamTouchdown: false,
-      videoRef: undefined
+      videoRef: undefined,
+      imageUrl: ''
     };
     this.handleChangeHomeTeamName = this.handleChangeHomeTeamName.bind(this);
     this.handleChangeAwayTeamName = this.handleChangeAwayTeamName.bind(this);
@@ -36,6 +38,7 @@ class App extends React.Component<IProps, IState> {
     this.handleChangeAwayTeamTDCheckbox = this.handleChangeAwayTeamTDCheckbox.bind(this);
     this.handleChangeGameDatePicker = this.handleChangeGameDatePicker.bind(this);
     this.handleChangeVideoRef = this.handleChangeVideoRef.bind(this);
+    this.handleChangeScreenShotURL = this.handleChangeScreenShotURL.bind(this);
   }
 
   async componentDidMount() {
@@ -55,7 +58,7 @@ class App extends React.Component<IProps, IState> {
     // });
   }
 
-  captureToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
+  captureTabToGoogleCloud = function(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
     chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, function(dataURI: string) {
         if (dataURI) {
           if(firebase.storage)
@@ -133,6 +136,10 @@ class App extends React.Component<IProps, IState> {
   handleChangeVideoRef(video : HTMLVideoElement) {
     this.setState({videoRef: video});
   }
+
+  handleChangeScreenShotURL(imageUrl : string) {
+    this.setState({imageUrl: imageUrl});
+  }
   
   render() {
     return (
@@ -167,10 +174,10 @@ class App extends React.Component<IProps, IState> {
           <input 
             type='button' 
             value='captureToFirebase'
-            onClick={() => this.captureToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
+            onClick={() => this.captureTabToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
         </form>
         <VideoStream onVideoUpdate={this.handleChangeVideoRef}/>
-        <VideoCapture videoRef={this.state.videoRef}/>
+        <VideoCapture videoRef={this.state.videoRef} onImageUrlChange={this.handleChangeScreenShotURL}/>
       </div>
     );
   }

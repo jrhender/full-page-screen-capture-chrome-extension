@@ -1,7 +1,8 @@
 import React from 'react';
 
 interface IVideoCaptureProps {
-    videoRef: HTMLVideoElement | undefined
+    videoRef: HTMLVideoElement | undefined;
+    onImageUrlChange: (imageUrl: string) => void
 }
 
 interface IVideoCaptureState {
@@ -33,6 +34,7 @@ class VideoCapture extends React.Component<IVideoCaptureProps, IVideoCaptureStat
             this.canvas.height = video.height;
             context.drawImage(video, 0, 0, video.width, video.height);
             var data = this.canvas.toDataURL('image/png');
+            this.props.onImageUrlChange(data); 
             this.setState({
                 imageSrc: data
             });
