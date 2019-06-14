@@ -87,8 +87,8 @@ class VideoStream extends React.Component<IVideoStreamProps, IVideoStreamState> 
                 </div>
                 <video 
                     id="video" 
-                    width="160" 
-                    height="120"
+                    width="720" 
+                    height="560"
                     autoPlay={true}
                     ref={(ref) => {this.video = ref}}
                 />
