@@ -58,11 +58,15 @@ class App extends React.Component<IProps, IState> {
     // });
   }
 
-  captureTabToGoogleCloud(homeTeamName: string, awayTeamName: string, gameDate: string, isHomeTeamTouchdown: boolean, isAwayTeamTouchdown: boolean){
+  captureTabToFirebase(){
     chrome.tabs.captureVisibleTab({format: 'png', quality: 100}, (dataURI: string) => {
         this.sendImageDataUrlToFirebase(dataURI);
       }
     );
+  }
+
+  captureVideoStreamToFirebase() {
+    this.sendImageDataUrlToFirebase(this.state.imageUrl);
   }
 
   sendImageDataUrlToFirebase(dataUrl: string) {
@@ -83,14 +87,14 @@ class App extends React.Component<IProps, IState> {
       let storageRef = firebase.storage().ref()
       
       // Calculate name
-      if(isHomeTeamTouchdown && ! isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isHomeTeamTD_${dateString}`);
+      if(this.state.isHomeTeamTouchdown && ! this.state.isAwayTeamTouchdown) {
+        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isHomeTeamTD_${dateString}`);
       }
-      else if(!isHomeTeamTouchdown && isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_isAwayTeamTD_${dateString}`);
+      else if(!this.state.isHomeTeamTouchdown && this.state.isAwayTeamTouchdown) {
+        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isAwayTeamTD_${dateString}`);
       }
-      else if(!isHomeTeamTouchdown && !isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/touchdown/${homeTeamName}_${awayTeamName}_${gameDate}_notTD_${dateString}`);
+      else if(!this.state.isHomeTeamTouchdown && !this.state.isAwayTeamTouchdown) {
+        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_notTD_${dateString}`);
       }
       else {
         return;
@@ -176,7 +180,7 @@ class App extends React.Component<IProps, IState> {
           <input 
             type='button' 
             value='captureToFirebase'
-            onClick={() => this.captureTabToGoogleCloud(this.state.homeTeamName, this.state.awayTeamName, this.state.gameDate, this.state.isHomeTeamTouchdown, this.state.isAwayTeamTouchdown)} />
+            onClick={() => this.captureVideoStreamToFirebase()} />
         </form>
         <VideoStream onVideoUpdate={this.handleChangeVideoRef}/>
         <VideoCapture videoRef={this.state.videoRef} onImageUrlChange={this.handleChangeScreenShotURL}/>
