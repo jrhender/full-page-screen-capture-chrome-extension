@@ -27,7 +27,7 @@ export function getStorageData (key: string) {
 
 export function setStorageData (key: string, value: any) {
     return new Promise<string>((resolve, reject) => {
-        localStorage.SetItem(key, value);
+        localStorage.setItem(key, value);
         resolve();
     })
 }

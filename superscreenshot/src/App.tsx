@@ -42,20 +42,25 @@ class App extends React.Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    // var data: any = await getStorageData('homeTeamName');
-    // const homeTeamName = data['homeTeamName'];
-
-    // var data: any = await getStorageData('awayTeamName');
-    // const awayTeamName = data['awayTeamName'];
-
-    // var data: any = await getStorageData('gameDate');
-    // const gameDate = data['gameDate'];
-
-    // this.setState({
-    //   homeTeamName: homeTeamName || '',
-    //   awayTeamName: awayTeamName || '',
-    //   gameDate: gameDate || ''
-    // });
+    try {
+      var data: any = await getStorageData('homeTeamName');
+      const homeTeamName = data['homeTeamName'];
+  
+      var data: any = await getStorageData('awayTeamName');
+      const awayTeamName = data['awayTeamName'];
+  
+      var data: any = await getStorageData('gameDate');
+      const gameDate = data['gameDate'];
+  
+      this.setState({
+        homeTeamName: homeTeamName || '',
+        awayTeamName: awayTeamName || '',
+        gameDate: gameDate || ''
+      });
+    }
+    catch {
+      console.log("form values not loaded")
+    }
   }
 
   captureTabToFirebase(){
@@ -94,7 +99,7 @@ class App extends React.Component<IProps, IState> {
         var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isAwayTeamTD_${dateString}`);
       }
       else if(!this.state.isHomeTeamTouchdown && !this.state.isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_notTD_${dateString}`);
+        var ref = storageRef.child(`images/nottouchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_notTD_${dateString}`);
       }
       else {
         return;
@@ -150,40 +155,42 @@ class App extends React.Component<IProps, IState> {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <p>
-            Superscreenshot!
-          </p>
-          <img src={logo} className="App-logo" alt="logo" />      
-        </header>
-        <form className="ImageDataForm">
-          <label>
-            Home Team Name:
-            <TeamDropdown onTeamChange={this.handleChangeHomeTeamName} selectedTeam={this.state.homeTeamName}/>
-          </label>
-          <label>
-            Away Team Name:
-            <TeamDropdown onTeamChange={this.handleChangeAwayTeamName} selectedTeam={this.state.awayTeamName}/>
-          </label>
-          <label>
-            Game Date:
-            <input type="date" onChange={this.handleChangeGameDatePicker} value={this.state.gameDate}/>
-          </label>
-          <label>
-            Is Home Team Touchdown:
-            <input type="checkbox" defaultChecked={this.state.isHomeTeamTouchdown} onChange={this.handleChangeHomeTeamTDCheckbox}/>
-          </label>
-          <label>
-            Is Away Team Touchdown:
-            <input type="checkbox" defaultChecked={this.state.isHomeTeamTouchdown} onChange={this.handleChangeAwayTeamTDCheckbox}/>
-          </label>
-          <input 
-            type='button' 
-            value='captureToFirebase'
-            onClick={() => this.captureVideoStreamToFirebase()} />
-        </form>
-        <VideoStream onVideoUpdate={this.handleChangeVideoRef}/>
-        <VideoCapture videoRef={this.state.videoRef} onImageUrlChange={this.handleChangeScreenShotURL}/>
+        <div className="grid-container">
+          <header className="App-header">
+            <p>
+              Superscreenshot!
+            </p>
+            <img src={logo} className="App-logo" alt="logo" />      
+          </header>
+          <form className="ImageDataForm">
+            <label>
+              Home Team Name:
+              <TeamDropdown onTeamChange={this.handleChangeHomeTeamName} selectedTeam={this.state.homeTeamName}/>
+            </label>
+            <label>
+              Away Team Name:
+              <TeamDropdown onTeamChange={this.handleChangeAwayTeamName} selectedTeam={this.state.awayTeamName}/>
+            </label>
+            <label>
+              Game Date:
+              <input type="date" onChange={this.handleChangeGameDatePicker} value={this.state.gameDate}/>
+            </label>
+            <label>
+              Is Home Team Touchdown:
+              <input type="checkbox" defaultChecked={this.state.isHomeTeamTouchdown} onChange={this.handleChangeHomeTeamTDCheckbox}/>
+            </label>
+            <label>
+              Is Away Team Touchdown:
+              <input type="checkbox" defaultChecked={this.state.isHomeTeamTouchdown} onChange={this.handleChangeAwayTeamTDCheckbox}/>
+            </label>
+            <input 
+              type='button' 
+              value='Send To Firebase'
+              onClick={() => this.captureVideoStreamToFirebase()} />
+          </form>
+          <VideoStream onVideoUpdate={this.handleChangeVideoRef}/>
+          <VideoCapture videoRef={this.state.videoRef} onImageUrlChange={this.handleChangeScreenShotURL}/>
+        </div>
       </div>
     );
   }

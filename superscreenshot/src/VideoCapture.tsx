@@ -46,12 +46,12 @@ class VideoCapture extends React.Component<IVideoCaptureProps, IVideoCaptureStat
     render () {
         return (
             <div>
+                <button id="startbutton" onClick={this.takePicture}>Take photo</button>
                 <canvas id="canvas" 
                     ref={(ref) => {this.canvas = ref}}/>
                 <div style={{display:'none'}}>
                     <img id="photo" alt="The screen capture will appear in this box." src={this.state.imageSrc}/>
                 </div>
-                <button id="startbutton" onClick={this.takePicture}>Take photo</button>
             </div>
         )
     }

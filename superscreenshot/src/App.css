@@ -31,3 +31,10 @@
   font-size: calc(10px + 2vmin);
   color: black;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1min-content 1fr;
+  grid-template-areas: ". ." ". .";
+}
