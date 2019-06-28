@@ -2,6 +2,9 @@ full-page-screen-capture.pem
 full-page-screen-capture.zip
 .DS_Store
 setupFirebase.js
+GoogleCloudML/env
+SportsEventDetection-c568d29e4af4.json
+sports_images.csv
 
 ##Below is added from create-react-app
 # dependencies
