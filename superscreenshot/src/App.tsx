@@ -93,13 +93,13 @@ class App extends React.Component<IProps, IState> {
       
       // Calculate name
       if(this.state.isHomeTeamTouchdown && ! this.state.isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isHomeTeamTD_${dateString}`);
+        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isHomeTeamTD_${dateString}.png`);
       }
       else if(!this.state.isHomeTeamTouchdown && this.state.isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isAwayTeamTD_${dateString}`);
+        var ref = storageRef.child(`images/touchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_isAwayTeamTD_${dateString}.png`);
       }
       else if(!this.state.isHomeTeamTouchdown && !this.state.isAwayTeamTouchdown) {
-        var ref = storageRef.child(`images/nottouchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_notTD_${dateString}`);
+        var ref = storageRef.child(`images/nottouchdown/${this.state.homeTeamName}_${this.state.awayTeamName}_${this.state.gameDate}_notTD_${dateString}.png`);
       }
       else {
         return;
