@@ -4,3 +4,8 @@ As per the article, the credentials are given to the python environment for the 
 
 #Usage
 Run python to generate csv, manually upload to Google Cloud
+
+#Dependencies
+installed, using pip:
+- google-cloud-storage
+- google-cloud-automl
