@@ -44,13 +44,16 @@ class App extends React.Component<IProps, IState> {
   async componentDidMount() {
     try {
       var data: any = await getStorageData('homeTeamName');
-      const homeTeamName = data['homeTeamName'];
+      //const homeTeamName = data['homeTeamName'];
+      const homeTeamName = data;
   
       var data: any = await getStorageData('awayTeamName');
-      const awayTeamName = data['awayTeamName'];
+      //const awayTeamName = data['awayTeamName'];
+      const awayTeamName = data;
   
       var data: any = await getStorageData('gameDate');
-      const gameDate = data['gameDate'];
+      // const gameDate = data['gameDate'];
+      const gameDate = data;
   
       this.setState({
         homeTeamName: homeTeamName || '',
