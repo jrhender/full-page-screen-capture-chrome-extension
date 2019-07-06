@@ -9,3 +9,4 @@ Run python to generate csv, manually upload to Google Cloud
 installed, using pip:
 - google-cloud-storage
 - google-cloud-automl
+Note: installed them into a virtual environment which can be activated by running "source env/bin/activate"
