@@ -13,6 +13,7 @@ const TeamDropdown = React.memo<ITeamDropdownProps>((props: ITeamDropdownProps) 
             <option value="falcons">Atlanta Falcons</option>
             <option value="ravens">Baltimore Ravens</option>
             <option value="bills">Buffalo Bills</option>
+            <option value="panthers">Carolina Panthers</option>
             <option value="bears">Chicago Bears</option>
             <option value="bengals">Cincinnati Bengals</option>
             <option value="browns">Cleveland Browns</option>
