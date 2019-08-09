@@ -1,0 +1,1 @@
+Initial versions of model.py, task.py, util.py and requirements.txt were taken from the Google Census TF-Keras [Example] (https://github.com/GoogleCloudPlatform/cloudml-samples/tree/master/census/tf-keras)
