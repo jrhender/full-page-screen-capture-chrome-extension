@@ -5,6 +5,7 @@ setupFirebase.js
 GoogleCloudAutoML/env
 GoogleCloudAutoML/models
 GoogleCloudMLEngine/env
+GoogleCloudMLEngine/images
 SportsEventDetection-c568d29e4af4.json
 sports_images.csv
 
