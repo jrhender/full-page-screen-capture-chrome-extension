@@ -1,0 +1,5 @@
+Filename,Predictions
+test_folder/bengals_browns_2018-11-25_isAwayTeamTD_2019-6-4T14-14-30-406.png,nottouchdown
+test_folder/bengals_browns_2018-11-25_notTD_2019-6-3T14-14-46-228.png,nottouchdown
+test_folder/browns_panthers_2018-12-09_isAwayTeamTD_2019-6-5T14-14-4-444.png,touchdown
+test_folder/panthers_seahawks_2018-11-25_notTD_2019-6-4T14-14-11-708.png,nottouchdown

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from os import listdir
 from os.path import isfile, join
 
-model = load_model('model1.h5')
+model = load_model('model2.h5')
 
 # print("model structure: ", model.summary())
 # print("model weights: ", model.get_weights())

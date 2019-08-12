@@ -30,13 +30,17 @@ preds=Dense(2,activation='softmax')(x) #final layer with softmax activation. Fir
 model=Model(inputs=base_model.input,outputs=preds) #specify the inputs and outputs
 #now a model has been created based on our architecture
 
-for layer in model.layers:
+# for layer in model.layers:
+#     layer.trainable=False
+# or if we want to set the first 10 layers of the network to be non-trainable
+for layer in model.layers[:5]:
     layer.trainable=False
-
+for layer in model.layers[5:]:
+    layer.trainable=True
 
 train_datagen=ImageDataGenerator(preprocessing_function=preprocess_input) #included in our dependencies
 
-train_generator=train_datagen.flow_from_directory('./../images/sportseventdetection-football',
+train_generator=train_datagen.flow_from_directory('./../images/sportseventdetection-football/train/',
                                                  target_size=(224,224),
                                                  color_mode='rgb',
                                                  batch_size=8,
@@ -51,6 +55,32 @@ model.compile(optimizer='Adam',loss='categorical_crossentropy',metrics=['accurac
 step_size_train=train_generator.n//train_generator.batch_size
 model.fit_generator(generator=train_generator,
                    steps_per_epoch=step_size_train,
-                   epochs=2)
+                   epochs=5)
 
-model.save('model1.h5')
+model.save('model3.h5')
+
+test_datagen=ImageDataGenerator(preprocessing_function=preprocess_input) #included in our dependencies
+test_generator = test_datagen.flow_from_directory(
+    directory='./../images/sportseventdetection-football/test/',
+    target_size=(224, 224),
+    color_mode="rgb",
+    batch_size=1,
+    class_mode=None,
+    shuffle=False,
+    seed=42
+)
+
+STEP_SIZE_TEST=test_generator.n//test_generator.batch_size
+test_generator.reset()
+pred=model.predict_generator(test_generator,
+    steps=STEP_SIZE_TEST,
+    verbose=1)
+
+predicted_class_indices=np.argmax(pred,axis=1)
+labels = (train_generator.class_indices)
+labels = dict((v,k) for k,v in labels.items())
+predictions = [labels[k] for k in predicted_class_indices]
+filenames=test_generator.filenames
+results=pd.DataFrame({"Filename":filenames,
+                      "Predictions":predictions})
+results.to_csv("results.csv",index=False)

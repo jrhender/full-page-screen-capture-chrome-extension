@@ -6,6 +6,7 @@ GoogleCloudAutoML/env
 GoogleCloudAutoML/models
 GoogleCloudMLEngine/env
 GoogleCloudMLEngine/images
+GoogleCloudMLEngine/models
 SportsEventDetection-c568d29e4af4.json
 sports_images.csv
 
